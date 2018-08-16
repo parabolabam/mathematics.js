@@ -1,4 +1,3 @@
-
 Array.prototype.clean = function(deleteValue) {
   for (var i = 0; i < this.length; i++) {
     if (this[i] == deleteValue) {
@@ -8,6 +7,7 @@ Array.prototype.clean = function(deleteValue) {
   }
   return this;
 };
+
 
 var matrix_multi = function(A, B){
 	if(A[0].length !== B.length) return "Matrix cannor be multiplyed due to different rows & cols number";
@@ -26,38 +26,45 @@ var matrix_multi = function(A, B){
 	return res;
 }
 
-
 var determinant = (A) => {
-		if(A.length !== A[0].length) return "Matrix is not square"
-		var N = A.length, B = [], denom = 1, exchanges = 0;
-	    for (var i = 0; i < N; ++i)
-	     { B[i] = [];
-	       for (var j = 0; j < N; ++j) B[i][j] = A[i][j];
-	     }
-	    for (var i = 0; i < N-1; ++i)
-	     { var maxN = i, maxValue = Math.abs(B[i][i]);
-	       for (var j = i+1; j < N; ++j)
-	        { var value = Math.abs(B[j][i]);
-	          if (value > maxValue){ maxN = j; maxValue = value; }
-	        }
-	       if (maxN > i)
-	        { var temp = B[i]; B[i] = B[maxN]; B[maxN] = temp;
-	          ++exchanges;
-	        }
-	       else { if (maxValue == 0) return maxValue; }
-	       var value1 = B[i][i];
-	       for (var j = i+1; j < N; ++j)
-	        { var value2 = B[j][i];
-	          B[j][i] = 0;
-	          for (var k = i+1; k < N; ++k) B[j][k] = (B[j][k]*value1-B[i][k]*value2)/denom;
-	        }
-	       denom = value1;
-	     }                                           //@ viewtopic.php?f=44&t=22390
-	    if (exchanges%2) return -B[N-1][N-1];
-	    else return B[N-1][N-1];
-
+		A = gauss_elimination_det(A);
+		let det = 1;
+		A.forEach( function(element, index) {
+			element.forEach( function(el, ind) {
+				if(index === ind) det *= el
+			});
+		});
+		return Math.round(det);
 }
 
+var gauss_elimination_det = (A) => {
+	if(A.length !== A[0].length) return `Method relies on square matrix, a little further
+	there will be a method working with matrices ${A.length} by ${A[0].length}`
+	for(var k = 0; k < A.length; k++){
+		for(var i = k + 1; i < A.length; i++){
+			let mu = A[i][k] / A[k][k];
+			for(var j = 0; j < A.length; j++){
+				A[i][j]-=A[k][j]*mu
+			}
+		}
+	}
+	return A
+}
+
+var gauss_elimination = (A) => {
+	if(A.length !== A[0].length) return `Method relies on square matrix, a little further
+	there will be a method working with matrices ${A.length} by ${A[0].length}`
+	for(var k = 0; k < A.length; k++){
+		for(var i = k + 1; i < A.length; i++){
+			let mu = A[i][k] / A[k][k];
+			for(var j = 0; j < A.length; j++){
+				A[i][j]-=A[k][j]*mu
+			}
+		}
+	}
+	A = A.map(item => item.map(el => Math.round(~~el)))
+	return A
+}
 
 var getMinor = (mtr, row, col) => {
 	var re = [];
@@ -110,43 +117,54 @@ var matrix_plus = (mtr1, mtr2) => {
 	var mtr1_row = mtr1.length,
 	 	mtr2_row = mtr2.length,
 		mtr1_col=mtr1[0].length,
-		mtr2_col=mtr2[0].length,
-		re = []
+		mtr2_col=mtr2[0].length
 	if(mtr1_row!== mtr2_row && mtr1_col !== mtr2_col)
 		return "Not equal sizes of both matrix"
 	for(var i = 0;  i<mtr2_row; i++) re[i] = []
 	for(var i = 0; i < mtr1_row; i++){
 		for(var j = 0; j< mtr1_col; j++){
-			re[i][j] = mtr1[i][j]+mtr2[i][j]
+			mtr1[i][j] = mtr1[i][j]+mtr2[i][j]
 		}
 	}
-	return re
+	return mtr1
 }
 
 var matrix_minus = (mtr1, mtr2) => {
 	var mtr1_row = mtr1.length,
 	 	mtr2_row = mtr2.length,
 		mtr1_col=mtr1[0].length,
-		mtr2_col=mtr2[0].length,
-		re = []
+		mtr2_col=mtr2[0].length
 	if(mtr1_row!== mtr2_row && mtr1_col !== mtr2_col)
 		return "Not equal sizes of both matrix"
-	for(var i = 0;  i<mtr2_row; i++) re[i] = []
 	for(var i = 0; i < mtr1_row; i++){
 		for(var j = 0; j< mtr1_col; j++){
-			re[i][j] = mtr1[i][j]-mtr2[i][j]
+			mtr1[i][j] = mtr1[i][j]-mtr2[i][j]
 		}
 	}
-	return re
+	return mtr1
+}
+
+var transpose = (a) => {
+	return a[0].map((element, index) => { return a.map(item => { return item[index] }) });
 }
 
 
-var transpone = (mtr) => {
+var max_in_array2D=(array2d) => { return array2d.map( item => { return max_in_array(item) }).reduce((c, d) => c>d?c:d)}
 
-	
-
-
+var max_in_array = (array)=>{
+	return array.reduce((a,b)=>a>b?a:b)
 }
+
+
+
+/*
+
+
+graph functions
+
+
+*/
+
 
 
 module.exports ={
@@ -159,6 +177,12 @@ module.exports ={
 	mtr_to_power:mtr_to_power,
 	get_1_Mtr:get_1_Mtr,
 	matrix_plus:matrix_plus,
-	matrix_minus:matrix_minus
+	matrix_minus:matrix_minus,
+	transpose:transpose,
+	gauss_elimination:gauss_elimination,
+	max_in_array2D:max_in_array2D,
+	matrix_minus_2:matrix_minus_2
 
 }
+
+
