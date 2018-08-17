@@ -157,15 +157,6 @@ var max_in_array = (array)=>{
 
 
 
-/*
-
-
-graph functions
-
-
-*/
-
-
 
 module.exports ={
 
@@ -181,7 +172,6 @@ module.exports ={
 	transpose:transpose,
 	gauss_elimination:gauss_elimination,
 	max_in_array2D:max_in_array2D,
-	matrix_minus_2:matrix_minus_2
 
 }
 

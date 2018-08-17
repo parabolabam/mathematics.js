@@ -1,13 +1,14 @@
 var math = require("./MathLib.js");
-var mtr_start = [   [1,7,5,3],
- 					[3,2,3,4],
-  					[6,2,4,6],
-   					[8,3,4,5] ]
+var graph = require("./UnorientedGraph.js");
+var orgraph = require("./OrientedGraph.js")
 
-var mtr_end = [   [1,7,5,3],
- 					[3,2,3,4],
-  					[6,2,4,6],
-   					[8,3,4,5] ]
 
-var det = math.matrix_minus_2(mtr_start,mtr_end);
-console.log(det)
+const graph_ = new orgraph();
+graph_.addVertex('A');
+graph_.addVertex('B');
+graph_.addVertex('C');
+graph_.addEdge('A', 'B', 1);
+graph_.addEdge('C', 'B', 2);
+graph_.addEdge('A', 'C', 3);
+graph_.addEdge('B', 'C', 4);
+console.log(graph_.bfs('A'))
